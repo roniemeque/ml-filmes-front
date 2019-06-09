@@ -1,0 +1,16 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+
+node_modules
+.npm
+.node_repl_history
+.next
+
+.DS_Store
+
+out
+
+.env
+.env.local
