@@ -8,7 +8,12 @@ export const TituloPrimario = styled.h1`
   line-height: 1.4;
 `;
 
-export const Titulo1 = styled.h3`
+export const Titulo1 = styled.h1`
   font-size: ${props => (props.grande ? "3rem" : "1.7rem")};
-  color: ${props => props.theme.cores.quatro};
+  color: salmon;
+`;
+
+export const Titulo2 = styled.h2`
+  font-size: ${props => (props.grande ? "3rem" : "1.7rem")};
+  color: black;
 `;

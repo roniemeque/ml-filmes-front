@@ -24,3 +24,12 @@ export const ButtonPrimary = styled(Button)`
   background-color: white;
   color: ${props => props.theme.cores.quatro};
 `;
+
+export const ButtonBlock = styled(Button)`
+  display: block;
+  margin: 2rem 0;
+  background: salmon;
+  color: white;
+  align-self: initial;
+  padding: 0.8rem 2rem;
+`;
