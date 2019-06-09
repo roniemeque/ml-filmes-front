@@ -1,5 +1,19 @@
 import styled from "styled-components";
 import { Titulo1 } from "../ui/Tipografia";
+import NProgress from "nprogress";
+import Link from "next/link";
+import Router from "next/router";
+import Meta from "./Meta";
+
+Router.onRouteChangeStart = () => {
+  NProgress.start();
+};
+Router.onRouteChangeComplete = () => {
+  NProgress.done();
+};
+Router.onRouteChangeError = () => {
+  NProgress.done();
+};
 
 const LayoutStyled = styled.div`
   min-height: 100vh;
@@ -23,7 +37,10 @@ class Layout extends React.Component {
     return (
       <LayoutStyled className="layout">
         <Header>
-          <Titulo1 grande>Filmes ML 🎬</Titulo1>
+          <Meta />
+          <Link href="/">
+            <Titulo1 grande>Filmes ML 🎬</Titulo1>
+          </Link>
         </Header>
         <Main>{children}</Main>
       </LayoutStyled>
