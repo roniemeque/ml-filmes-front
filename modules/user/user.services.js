@@ -16,12 +16,12 @@ export const atualizarMedias = async () => {
   return medias || null;
 };
 
-export const pegarSugestoes = async user_id => {
+export const pegarRecomendacoes = async user_id => {
   const response = await fetch(
     `${process.env.API_BASE_URL}/users/${user_id}/sugestoes`,
   );
 
-  const { sugestoes } = await response.json();
+  const { filmes } = await response.json();
 
-  return sugestoes || null;
+  return filmes || null;
 };

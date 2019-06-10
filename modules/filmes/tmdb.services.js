@@ -15,3 +15,17 @@ export const buscaTopRated = async (pagina = 1) => {
     ? results.filter(({ release_date }) => release_date < "2015-01-01")
     : [];
 };
+
+export const buscaFilme = async tmdb_id => {
+  const response = await fetch(
+    `${process.env.TMDB_BASE_URL}/movie/${tmdb_id}?api_key=${
+      process.env.TMDB_API_KEY
+    }&language=pt`,
+  );
+
+  const filme = await response.json();
+
+  //removendo filmes depois de 2014 para bater com o banco
+
+  return filme;
+};
