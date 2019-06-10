@@ -24,3 +24,13 @@ export const salvarAvaliacao = async ({ id: filme_tmdb_id, nota }) => {
 
   return notaSalva || null;
 };
+
+export const rodarModelo = async () => {
+  const response = await fetch(
+    `${process.env.API_BASE_URL}/rodar-modelo?quantidade_users=1000`,
+  );
+
+  const responseJson = await response.json();
+
+  return responseJson || null;
+};

@@ -7,6 +7,7 @@ import { buscaTopRated } from "../modules/filmes/tmdb.services";
 import { salvarAvaliacao } from "../modules/filmes/filmes.service";
 import Filme from "../modules/filmes/Filme";
 import { ButtonBlock } from "../modules/ui/Buttons";
+import NProgress from "nprogress";
 
 const MINIMO_NOTAS = 3;
 
@@ -79,9 +80,18 @@ function Setup({ filmes: filmesIniciais }) {
   const atualizaMediasESegue = async () => {
     if (!podeSeguir) return;
 
-    const medias = await atualizarMedias();
+    NProgress.start();
+    await atualizarMedias();
 
-    Router.push("/");
+    Router.push(
+      `/recomendacoes?user_id=${user.id}`,
+      `/recomendacoes?user_id=${user.id}`,
+      {
+        query: {
+          user_id: user.id,
+        },
+      },
+    );
   };
 
   const carregaMaisFilmes = async () => {
