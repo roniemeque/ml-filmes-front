@@ -41,8 +41,6 @@ const EmojiButton = styled.span`
 `;
 
 function Filme({ id, poster_path, notaDada, avaliarFilme }) {
-  const [nota, setNota] = useState(0);
-
   return (
     <FilmeStyled>
       <Poster src={`https://image.tmdb.org/t/p/w200/${poster_path}`} />

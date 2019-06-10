@@ -1,10 +1,10 @@
 import fetch from "isomorphic-unfetch";
 
-export const buscaTopRated = async () => {
+export const buscaTopRated = async (pagina = 1) => {
   const response = await fetch(
     `${process.env.TMDB_BASE_URL}/movie/top_rated?api_key=${
       process.env.TMDB_API_KEY
-    }&language=pt`,
+    }&language=pt&page=${pagina}`,
   );
 
   const { results } = await response.json();

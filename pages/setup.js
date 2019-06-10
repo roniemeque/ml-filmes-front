@@ -1,12 +1,18 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { pegaUser } from "../modules/user/storage";
+import { atualizarMedias } from "../modules/user/user.services";
 import Router from "next/router";
 import { buscaTopRated } from "../modules/filmes/tmdb.services";
+import { salvarAvaliacao } from "../modules/filmes/filmes.service";
 import Filme from "../modules/filmes/Filme";
 import { ButtonBlock } from "../modules/ui/Buttons";
 
-const SetupStyled = styled.div``;
+const MINIMO_NOTAS = 3;
+
+const SetupStyled = styled.div`
+  padding-bottom: 8rem;
+`;
 
 const TextoIntroducao = styled.p`
   font-size: 1.6rem;
@@ -29,12 +35,17 @@ const BotaoSeguir = styled(ButtonBlock)`
   background: ${props => (props.disponivel ? "salmon" : "#a7a7a7")};
 `;
 
+const BotaoCarregarMais = styled(ButtonBlock)`
+  background: #62bb31;
+  margin-top: 2rem;
+  margin: 2rem auto;
+`;
+
 function Setup({ filmes: filmesIniciais }) {
   const [user, setUser] = useState();
   const [filmes, setFilmes] = useState(filmesIniciais);
+  const [proximaPagina, setProximaPagina] = useState(2);
   const [filmesAvaliados, setFilmesAvaliados] = useState([]);
-
-  console.log(filmesAvaliados);
 
   useEffect(() => {
     const userGuardado = pegaUser();
@@ -45,7 +56,7 @@ function Setup({ filmes: filmesIniciais }) {
     setUser(userGuardado);
   }, [1]);
 
-  const avaliarFilme = (id, nota) => {
+  const avaliarFilme = async (id, nota) => {
     //se ja tem, atualiza
     const filmeParaAvaliar = filmesAvaliados.find(
       filmeAvaliado => filmeAvaliado.id === id,
@@ -60,10 +71,27 @@ function Setup({ filmes: filmesIniciais }) {
       outroFilmeAvaliado => id !== outroFilmeAvaliado.id,
     );
 
+    await salvarAvaliacao(filmeParaAvaliar);
+
     setFilmesAvaliados([...outrosFilmesAvaliados, filmeParaAvaliar]);
   };
 
-  const podeSeguir = filmesAvaliados.length >= 10;
+  const atualizaMediasESegue = async () => {
+    if (!podeSeguir) return;
+
+    const medias = await atualizarMedias();
+
+    Router.push("/");
+  };
+
+  const carregaMaisFilmes = async () => {
+    const proximosFilmes = await buscaTopRated(proximaPagina);
+    setFilmes([...filmes, ...proximosFilmes]);
+
+    setProximaPagina(proximaPagina + 1);
+  };
+
+  const podeSeguir = filmesAvaliados.length >= MINIMO_NOTAS;
 
   return (
     <SetupStyled>
@@ -89,12 +117,16 @@ function Setup({ filmes: filmesIniciais }) {
           );
         })}
       </FilmesLista>
-      <BotaoSeguir disponivel={podeSeguir}>
+      <BotaoSeguir disponivel={podeSeguir} onClick={atualizaMediasESegue}>
         {podeSeguir
           ? "Prosseguir"
-          : `${filmesAvaliados.length ? "Avalie mais" : "Avalie"} ${10 -
-              filmesAvaliados.length} filmes`}
+          : `${
+              filmesAvaliados.length ? "Avalie mais" : "Avalie"
+            } ${MINIMO_NOTAS - filmesAvaliados.length} filmes`}
       </BotaoSeguir>
+      <BotaoCarregarMais onClick={carregaMaisFilmes}>
+        Carregar mais
+      </BotaoCarregarMais>
     </SetupStyled>
   );
 }
